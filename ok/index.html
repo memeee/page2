@@ -1,0 +1,521 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script src="./epgold.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+ 
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+*, :after, :before {
+    box-sizing: border-box;
+}
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .parent2 { width: 100%!important;}
+  #my-video {
+    max-width: fit-content  !important;
+  }
+  .playerBlock {
+    position: fixed !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 100% !important;
+	margin-right: 0% !important;
+    transform: translate(0%, 0%) !important;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px)  {
+   .parent2 { width: 47%;}
+	
+	.playerBlock {
+     top: 50% ;
+    left: 50% ;
+    margin-right: -50% ;
+    transform: translate(-50%, -50%) ;
+  }
+	
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .parent2 { width: 47%;}
+} 
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+   .parent2 { width: 30%;}
+   .playerBlock {
+    top: 25% ;
+    left: 25% ;
+    margin-right: 0%;
+    transform: translate(0%, 0%);
+  }
+    
+} 
+
+.list {
+         display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    top: 100px;
+    /*position: absolute;*/
+	 /*width: -webkit-fill-available;*/
+}
+
+.parent2 {
+      flex-grow: 1;
+    /* flex-shrink: 0; */
+    /* flex-basis: 30%; */
+    /* width: 32%;*/
+    margin: 5px;
+    border: 1px solid black;
+    background: #f9f9fa;
+	    border-radius: 5px;
+}
+
+#playerBlock{
+/*inset: 136px 0px 0px 446px;*/
+    position: fixed;
+    width: max-content;
+    height: max-content;
+    border: 1px solid rgb(43, 51, 63);
+    background: rgb(43, 51, 63);
+	z-index: 2;
+}
+
+
+</style>
+ 
+
+<style>
+
+.playing::before {
+border-top: 4px solid transparent;
+    border-left: 8px solid #00973a;
+    border-bottom: 4px solid transparent;
+    width: 0;
+    height: auto;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: auto;
+    bottom: auto;
+    left: -15px;
+}
+
+.headCh{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid;
+}
+
+
+img{
+ object-fit: contain;
+               height: 100%;
+               width: 100%;
+}
+
+.img{
+ border-right: 1px solid black;
+     padding: 5px;
+height: 3em;
+}
+
+
+.timeLeft{
+    position: absolute;
+    right: 0px;
+    top: -5px;
+    font: menu;
+    color: #959595;
+    font-size: smaller;
+}
+
+.title{
+color: black;
+    align-self: center;
+    font-size: 17px;
+    cursor: pointer;
+    font-weight: bold;
+	position: relative;
+}
+
+
+
+.progs{
+    padding: 5px 5px 5px 15px;
+  
+}
+
+.info{
+  display: inline;
+}
+
+.circle{
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 7px;
+    background-color: #ed0202;
+    margin-left: 3px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.pr {
+   margin: 10px;
+    font: menu; 
+    font-size: small;
+}
+
+
+.playing {
+         color: green;
+         position: relative;
+}
+
+.progress {
+         background: #00973a;
+               transition: width 1s;
+               height: 100%;
+}
+.progressLine {
+        background: #d8dcde;
+		width: auto;
+		height: 2px;
+}
+
+.progressBlock {
+position: relative;
+            padding-top: 10px;
+         color: #1d8f00;
+}
+
+
+
+</style>
+
+<style>
+  .time{ 
+     display: inline-block;
+    font-weight: bold;
+}
+
+  .rec{ 
+      color: #ab4646;
+} 
+
+ .cat{ 
+border: 1px solid;
+    margin: 3px;
+    padding: 3px;
+    cursor: pointer;
+    align-self: center;
+} 
+
+#category{ 
+    color: white;
+    height: auto;
+    width: 90%;
+    display: flex;
+    padding: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: #424242;
+    position: fixed;
+    border: 1px solid;
+    border-radius: 5px;
+    top: 1%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0%);
+}
+
+
+.tv{
+padding: 5px;
+    background: #0073b7;
+    color: white;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+	}
+	
+.tv:hover{
+     background: #0092e9;
+}
+</style>
+
+<style>
+
+.fixedBtn{
+position: fixed;
+    display: block;
+    border: none;
+    outline: none;
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 18px;
+    z-index: 1;
+	  bottom: 15px;
+
+}
+
+.fixedBtn:hover {
+  background-color: #555; 
+}
+
+#refreshBtn {
+    right: 15px;
+}
+
+#catBtn {
+   right: 75px;
+}
+
+
+.icons {
+    font-size: 20px !important;
+}
+
+.buttonWindow{
+   width: auto;
+    border: 1px solid white;
+    color: white;
+    padding: 2px;
+    text-align: center;
+    cursor: pointer;
+    margin: 2px;
+}
+
+
+
+#playerBlockheader{
+display: flex;
+    align-items: center;
+    margin: 2px;
+}
+
+#playerTitle{
+cursor: move;
+    flex: auto;
+    margin: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+
+#my-video{
+ resize: both;
+	overflow: hidden;
+    min-width: -webkit-fill-available;
+	max-height: 90vh;
+}
+
+</style>
+
+
+
+
+</head>
+<body style="
+    margin: 0px;
+">
+
+<div class="list" id="list" ></div>
+<div id="category"> </div> 
+
+
+
+<button onclick="topFunction()" class="fixedBtn" id="refreshBtn" title="Go to top" style="display: block;">
+<span class="material-icons">
+refresh
+</span>
+</button>
+
+<button onclick="topFunction()" class="fixedBtn" id="catBtn" title="Go to top" style="display: block;">
+<span class="material-icons">
+list
+</span>
+</button>
+
+
+
+<div id="playerBlock" class="playerBlock" >
+   <div id="playerBlockheader" >
+      <div id="playerTitle">PLayer</div>
+      <div class="buttonWindow" id="but" onclick="videojs(&quot;my-video&quot;).requestFullscreen();" >
+         <i class="material-icons icons">expand_more</i>
+      </div>
+      <div class="buttonWindow" id="but" onclick='videojs("my-video").requestFullscreen();' >
+         <i class="material-icons icons">fullscreen </i>
+      </div>
+      <div class="buttonWindow" id="but" onclick='videojs("my-video").pause();document.getElementById("playerBlock").style.display ="none"' >
+         <i class="material-icons icons" >close</i>
+      </div>
+   </div>
+   <div id="hide" >
+      <video id="my-video" class="video-js" controls preload="auto" width="640" height="248"  data-setup="{}" >
+         <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+      </video>
+   </div>
+</div>
+
+
+
+
+ 
+ 
+<script>
+function tv(url, poster, title) {
+  document.getElementById("playerBlock").style.display = "unset"
+  document.getElementById("playerTitle").innerHTML = title;
+  var player = videojs("my-video");
+  player.poster(poster)
+  player.src({
+    type: "application/x-mpegURL",
+    src: url,
+  });
+  player.play();
+}
+</script>
+
+
+<script>
+
+
+
+function hide() {
+  var x = document.getElementById("hide");
+  if (x.style.display === "none") {
+    x.style.display = "block";	
+	document.getElementById("but").innerHTML ="_"
+	//document.getElementById("playerBlock").style.left = "50%"
+	//document.getElementById("playerBlock").style.top = "50%"
+	document.getElementById("playerBlock").style.top =  "2%"
+	document.getElementById("playerBlock").style.left =  "2%"
+	//document.getElementById("playerBlock").style.transform = "translate(-50%, -50%)"
+	//document.getElementById("playerBlock").style.transform = ""
+    //offsetLeft = document.getElementById("playerBlock").offsetLeft
+    //offsetTop = document.getElementById("playerBlock").offsetTop
+	//document.getElementById("playerBlock").style.transform = ""
+	//document.getElementById("playerBlock").offsetLeft = offsetLeft
+	//document.getElementById("playerBlock").offsetTop = offsetTop
+
+  } else {
+    x.style.display = "none";
+	document.getElementById("but").innerHTML ="&#xe5d0;"
+	document.getElementById("playerBlock").style.inset = ""
+	document.getElementById("playerBlock").style.transform = ""
+	document.getElementById("playerBlock").style.right = "100px"
+	document.getElementById("playerBlock").style.bottom =  "25px"
+	
+	
+
+  }
+}
+</script>
+<script>
+document.getElementById("my-video").addEventListener('resize', function(event) {
+//console.log(123)
+}, true);
+
+dragElement(document.getElementById("playerBlock"));
+
+function dragElement(elmnt) {
+  var pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    document.getElementById(elmnt.id + "header")
+      .onmousedown = dragMouseDown;
+  } else {
+    elmnt.onmousedown = dragMouseDown;
+  }
+  
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    offsetTop = elmnt.offsetTop - pos2
+    offsetLeft = elmnt.offsetLeft - pos1
+    if (document.getElementById("playerBlock")
+      .offsetTop < 0) {
+      elmnt.style.top = 0 + "px";
+      return
+    }
+    elmnt.style.top = offsetTop + "px";
+    elmnt.style.left = offsetLeft + "px";
+  }
+  
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+</script>
+
+<script>
+
+
+
+function addScript(src) {
+	s = document.createElement('script');
+	s.setAttribute('src', src);
+	document.body.appendChild(s);
+}
+
+//window.location.hash
+//var settingsGlobal;
+
+//    height: 300px;
+//    overflow-x: auto;
+ start()
+//addScript('main.js');
+async function start() {
+	
+	
+	//await create  m3u8.json from epg.xml & playlist.m3u8
+	await GetM3u8({
+		url_EPG: 'http://epg.one/epg.xml?ds=a', 
+		//url_EPG: 'http://192.168.1.64/epg.xml?ds=aa', 
+		url_M3u8: 'https://memeee.github.io/page2/ok/playlist.m3u8', 
+		//cors_anywhere: 'aasds/'
+	});
+	console.log('object m3u8 created');
+	
+	//load DOM 
+	await addScript('main.js');
+	console.log('load main.js');
+}
+</script>
+</body></html>
